@@ -1,0 +1,24 @@
+---
+- name: Copy file to Cisco device
+  hosts: all
+  gather_facts: no
+  connection: network_cli
+  collections:
+    - cisco.ios
+  tasks:
+    - name: Run cli_command on Cisco IOS and display results
+      block:
+        - name: Run cli_command on Cisco IOS
+          cli_command:
+            command:
+              - copy tftp://10.120.245.203//n6000-uk9.7.3.8.N1.1.bin bootflash:/n6000-uk9.7.3.8.N1.1.bin vrf management
+            #prompt:
+            #  - confirm'[n6000-uk9.7.3.8.N1.1.bin]'
+            #answer:
+            #  - '\r'
+          register: result
+
+    - name: Display result to terminal window
+      debug:
+        var: result.stdout_lines
+      when: ansible_network_os == 'ios'
